@@ -85,8 +85,12 @@ class MasterService(Base):
     master_id: Mapped[int] = mapped_column(ForeignKey("masters.id"), nullable=False)
     service_id: Mapped[int] = mapped_column(ForeignKey("services.id"), nullable=False)
 
-    master: Mapped[Master] = relationship("Master", lazy="selectin")
-    service: Mapped[Service] = relationship("Service", lazy="selectin")
+    master: Mapped[Master] = relationship(
+        "Master", lazy="selectin", overlaps="masters,services"
+    )
+    service: Mapped[Service] = relationship(
+        "Service", lazy="selectin", overlaps="masters,services"
+    )
 
 
 class User(Base):
