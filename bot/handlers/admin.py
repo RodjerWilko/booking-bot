@@ -29,7 +29,7 @@ _config = Config.from_env()
 class AdminFilter:
     """Фильтр: только пользователи из ADMIN_IDS."""
 
-    async def __call__(self, event: Message | CallbackQuery) -> bool:
+    def __call__(self, event: Message | CallbackQuery) -> bool:
         user = getattr(event, "from_user", None)
         if not user:
             return False

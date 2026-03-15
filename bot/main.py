@@ -44,8 +44,8 @@ async def main() -> None:
     dp.message.middleware(DbSessionMiddleware(session_pool))
     dp.callback_query.middleware(DbSessionMiddleware(session_pool))
 
-    dp.include_router(user.router)
     dp.include_router(admin.router)
+    dp.include_router(user.router)
 
     scheduler = setup_scheduler(bot, session_pool, config)
 

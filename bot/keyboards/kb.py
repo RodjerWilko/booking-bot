@@ -107,10 +107,11 @@ def times_kb(
     rows = []
     row: list[InlineKeyboardButton] = []
     for t in slots:
-        time_str = t.strftime("%H:%M")
+        time_display = t.strftime("%H:%M")
+        time_cb = t.strftime("%H-%M")  # дефис, чтобы не конфликтовать с split(":")
         row.append(InlineKeyboardButton(
-            text=time_str,
-            callback_data=f"time:{master_id}:{service_id}:{date_iso}:{time_str}",
+            text=time_display,
+            callback_data=f"time:{master_id}:{service_id}:{date_iso}:{time_cb}",
         ))
         if len(row) >= 4:
             rows.append(row)
@@ -134,11 +135,11 @@ def confirm_booking_kb(
 ) -> InlineKeyboardMarkup:
     """Подтверждение записи. Подтвердить -> confirm_book:... | Отмена -> book."""
     date_str = booking_date.isoformat()
-    time_str = time_start.strftime("%H:%M")
+    time_cb = time_start.strftime("%H-%M")  # дефис в callback_data
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(
             text="✅ Подтвердить",
-            callback_data=f"confirm_book:{master_id}:{service_id}:{date_str}:{time_str}",
+            callback_data=f"confirm_book:{master_id}:{service_id}:{date_str}:{time_cb}",
         )],
         [InlineKeyboardButton(text="❌ Отмена", callback_data="book")],
     ])

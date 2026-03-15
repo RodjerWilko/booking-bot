@@ -220,13 +220,12 @@ async def cb_date(callback: CallbackQuery, session) -> None:
 @router.callback_query(F.data.startswith("time:"))
 async def cb_time(callback: CallbackQuery, session) -> None:
     """Выбрано время — показать подтверждение записи."""
-    parts = callback.data.split(":")
+    parts = callback.data.split(":", maxsplit=4)
     master_id = int(parts[1])
     service_id = int(parts[2])
     date_iso = parts[3]
-    time_str = parts[4]
+    time_str = parts[4].replace("-", ":")  # в callback храним HH-MM
     target_date = date.fromisoformat(date_iso)
-    # time_str "14:00" -> time
     hour, minute = map(int, time_str.split(":"))
     time_start = time(hour, minute)
     service = await get_service(session, service_id)
@@ -267,11 +266,11 @@ async def cb_confirm_book(
     state: FSMContext,
 ) -> None:
     """Подтвердить запись, создать бронь, уведомить админов."""
-    parts = callback.data.split(":")
+    parts = callback.data.split(":", maxsplit=4)
     master_id = int(parts[1])
     service_id = int(parts[2])
     date_iso = parts[3]
-    time_str = parts[4]
+    time_str = parts[4].replace("-", ":")  # в callback храним HH-MM
     target_date = date.fromisoformat(date_iso)
     hour, minute = map(int, time_str.split(":"))
     time_start = time(hour, minute)
